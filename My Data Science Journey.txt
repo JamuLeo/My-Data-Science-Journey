@@ -1,0 +1,1625 @@
+Experiment Overview
+This notebook demonstrates Missing Value Treatment using the Titanic dataset. The student (Ziya Firdos) is learning how to handle missing data in Python using pandas.
+
+Command-by-Command Explanation
+Section 1: Basic Setup
+python
+# Experiment no:-04
+# Aim:- Central Tendency of Measures
+# Name: Ziya Firdos
+# Roll no: 68
+# sec: 3A
+# Subjict: ET1
+# Date: 04/08/25
+What it does: These are comments for documentation
+
+Purpose: Identifies the experiment number, aim, and student information
+
+Section 2: Import Libraries
+python
+import pandas as pd
+import os
+What it does:
+
+pandas: Data manipulation library (for DataFrames)
+
+os: Operating system interface (for file/directory operations)
+
+Section 3: Working Directory Management
+python
+os.getcwd()  # Get current working directory
+os.chdir('C:\\Users\\USER\\Desktop')  # Change to Desktop directory
+What it does:
+
+getcwd(): Shows where Python is currently looking for files
+
+chdir(): Changes to a specific directory
+
+Section 4: Load Data
+python
+data = pd.read_csv("titanic.csv")
+What it does: Loads the Titanic dataset from a CSV file into a pandas DataFrame
+
+Note: The file must be in the current working directory (Desktop)
+
+Section 5: Data Inspection
+python
+data  # Display entire dataset
+data.head(25)  # Display first 25 rows
+data.tail()  # Display last 5 rows
+What it does:
+
+data: Shows all 891 rows
+
+head(25): Shows first 25 rows (good for initial inspection)
+
+tail(): Shows last 5 rows (checks end of dataset)
+
+Section 6: Data Information
+python
+data.info()  # Show column info, data types, non-null counts
+data.describe()  # Statistical summary of numeric columns
+What it does:
+
+info(): Shows data structure, memory usage, and missing values
+
+describe(): Calculates mean, std, min, max, percentiles for numeric columns
+
+Section 7: Missing Value Detection
+python
+data.isna()  # Shows True/False for each cell (True = missing)
+data.isna().any()  # Shows which columns HAVE any missing values
+data.isna().sum()  # Counts missing values per column
+What it does:
+
+Age: 177 missing values
+
+Cabin: 687 missing values (most are missing)
+
+Embarked: 2 missing values
+
+Section 8: Missing Value Treatment Methods
+Method 1: Deletion
+python
+df1 = data.dropna()  # Remove ALL rows with ANY missing values
+df1  # Show remaining data (only 183 rows left)
+What it does: Deletes entire rows if ANY column has missing values
+
+Problem: Too aggressive - loses 708 rows (79% of data!)
+
+Method 2: Imputation (Fill with Mean)
+python
+data["Age"].fillna(29.699118)  # Fill missing Age with mean value
+What it does: Fills missing Age values with 29.699118 (the mean age)
+
+Better approach: Usually use data["Age"].fillna(data["Age"].mean(), inplace=True)
+
+Section 9: Verification
+python
+df1.isna().sum()  # Verify no missing values in cleaned dataset
+What it does: Confirms all missing values are gone (all zeros)
+
+Key Concepts Demonstrated
+Missing Value Types:
+
+MCAR (Missing Completely At Random): Embarked (only 2 missing)
+
+MAR (Missing At Random): Age (177 missing)
+
+MNAR (Missing Not At Random): Cabin (most are missing - related to passenger class)
+
+Treatment Strategies:
+
+Deletion: Good when <5% data missing, bad when >20%
+
+Imputation: Fill with mean/median/mode
+
+Better approaches not shown:
+
+Fill with median (less affected by outliers)
+
+Group-based imputation (fill Age based on Pclass or Sex)
+
+Predictive imputation (using ML models)
+
+Central Tendency:
+
+Mean (29.70): Used for Age imputation
+
+Could also use Median (28.0) or Mode (24.0)
+
+
+
+
+
+
+
+DataFrame Creation - Complete Guide for Data Science Learning
+Experiment Overview
+This notebook demonstrates DataFrame creation and manipulation using pandas. Perfect for data science beginners!
+
+🔍 Section-by-Section Breakdown
+📝 1. Metadata & Setup
+python
+# Experiment no:5
+# Aim: To perform operation for creation of a data frame 
+# Name: Ziya Firdos
+# Roll no:68
+# sec:3A
+# Subjict:ET1
+# Date:25/08/25
+Why important: Good documentation practice! Always comment your code purpose
+
+Data Science Tip: Add more details like dataset source, business problem
+
+📦 2. Import Libraries
+python
+import pandas as pd
+What is pandas?: Python's #1 data manipulation library
+
+Alias 'pd': Standard convention (saves typing)
+
+Data Science Essential: 90% of data work uses pandas
+
+🏗️ 3. Creating Your First DataFrame
+python
+df = pd.DataFrame([[10,15,20,16],[19,17,15,13],[15,19,17,14]],
+                  columns=["CD","DBMS","DSS","CAO"])
+⚡ EXPLANATION:
+
+pd.DataFrame(): Creates a 2D table (like Excel sheet)
+
+First argument: List of lists = rows of data
+
+columns: Names for each column
+
+What you made:
+
+3 rows (students/exams)
+
+4 columns (subjects: CD, DBMS, DSS, CAO)
+
+Values: Marks/scores
+
+📊 VISUALIZATION:
+
+text
+        CD  DBMS  DSS  CAO
+Row 0:  10    15   20   16  ← Student 1 marks
+Row 1:  19    17   15   13  ← Student 2 marks  
+Row 2:  15    19   17   14  ← Student 3 marks
+📐 4. DataFrame Properties
+python
+df.shape    # Returns (3, 4) → (rows, columns)
+df.size     # Returns 12 → total cells (3×4)
+df.ndim     # Returns 2 → 2-dimensional table
+📈 DATA SCIENCE CONTEXT:
+
+shape: First thing to check - know your data size
+
+size: Useful for memory optimization
+
+ndim: Important for ML (most models need 2D data)
+
+➕ 5. Adding Data (Appending Rows)
+python
+# Create new DataFrame with 1 row
+df2 = pd.DataFrame([[5,6,7,8]], columns=["CD","DBMS","DSS","CAO"])
+
+# Append with reset index
+df3 = df.append(df2, ignore_index=True)  # Good: new index 0,1,2,3
+
+# Append without reset index  
+df3 = df.append(df2)  # Bad: duplicate index 0 appears twice!
+⚠️ CRITICAL LEARNING:
+
+ignore_index=True: Resets index (0,1,2,3...)
+
+Without it: Index duplicates cause problems!
+
+Modern alternative: Use pd.concat([df, df2], ignore_index=True)
+
+📊 6. Adding Columns
+python
+df3["DM"] = [12,15,17,19]  # Add new column "DM" (Data Mining)
+💡 HOW IT WORKS:
+
+df3["NEW_COLUMN"] = Creates/accesses column
+
+Assign list with same length as rows
+
+Real use: Adding calculated fields, new features
+
+🗑️ 7. Deleting Data
+python
+# Delete ROWS by index
+df4 = df3.drop(index=[1])  # Remove row with index 1
+
+# Delete COLUMNS by name  
+df5 = df3.drop(columns=["DM"])  # Remove "DM" column
+🎯 DATA CLEANING TIPS:
+
+axis=0: Delete rows (default)
+
+axis=1: Delete columns
+
+inplace=True: Modify original (careful!)
+
+Common uses: Remove outliers, irrelevant features
+
+📊 8. Statistical Operations
+python
+df5["DSS"].mean()    # Average: (20+15+17+7)/4 = 14.75
+df5["DSS"].median()  # Middle value: 16.0
+df5["DSS"].mode()    # Most frequent: all appear once
+df5["DSS"].min()     # Smallest: 7
+df5["DSS"].max()     # Largest: 20
+📊 STATISTICS FOR DATA SCIENCE:
+
+Mean: Sensitive to outliers (7 drags it down)
+
+Median: Better for skewed data
+
+Mode: Useful for categorical data
+
+Min/Max: Range detection, outlier identification
+
+📝 9. Series Creation (1D Data)
+python
+Name = ["Shriram","Shrihari","Harshal","Kartik","Rohan"]
+Roll_list = pd.Series(Name, index=[1,2,3,4,5])
+🔗 SERIES vs DATAFRAME:
+
+Series: 1D array with index (like single DataFrame column)
+
+DataFrame: 2D table (multiple Series combined)
+
+Index: Custom labels instead of 0,1,2...
+
+🎯 KEY DATA SCIENCE CONCEPTS DEMONSTRATED
+1. Data Structure
+python
+# Hierarchy in pandas
+DataFrame (2D Table)
+    ↓
+Series (1D Column/Row)
+    ↓
+Individual Cells (Scalar values)
+2. CRUD Operations
+Create: pd.DataFrame(), pd.Series()
+
+Read: df.head(), df["column"]
+
+Update: df["new"] = values, df.append()
+
+Delete: df.drop()
+
+3. Data Types Understanding
+python
+# Check your data types
+df.dtypes  # int64 for numbers, object for text
+
+# In real data science:
+# - Numeric: int, float → for calculations
+# - Categorical: object, category → for grouping
+# - DateTime: timestamp → for time series
+4. Index Management
+Default: 0,1,2,3...
+
+Custom: Set meaningful indices
+
+Duplicate indices: BAD! Causes errors
+
+Reset: df.reset_index(drop=True)
+
+🚀 REAL DATA SCIENCE APPLICATIONS
+Scenario 1: Student Performance Analysis
+python
+# Create student dataset
+students = pd.DataFrame({
+    'Name': ['Alice', 'Bob', 'Charlie'],
+    'Math': [85, 92, 78],
+    'Science': [88, 79, 92],
+    'English': [90, 85, 88]
+})
+
+# Add average column
+students['Average'] = students[['Math','Science','English']].mean(axis=1)
+
+# Find top performer
+top_student = students.loc[students['Average'].idxmax()]
+Scenario 2: Sales Data
+python
+# Simulate sales data
+sales = pd.DataFrame({
+    'Date': pd.date_range('2024-01-01', periods=30),
+    'Product': ['A','B','C'] * 10,
+    'Revenue': np.random.randint(100, 1000, 30)
+})
+
+# Monthly summary
+monthly_sales = sales.groupby('Product')['Revenue'].sum()
+
+
+CRUCIAL COMMANDS FROM BOTH NOTEBOOKS
+📁 FILE 1: Missing Value Treatment (Exp_04)
+1. LOADING DATA
+python
+data = pd.read_csv("titanic.csv")
+# Load CSV file into DataFrame - foundational for ALL data projects
+2. DATA INSPECTION
+python
+data.info()
+# Shows columns, data types, non-null counts - FIRST STEP in any analysis
+3. CHECK MISSING VALUES
+python
+data.isna().sum()
+# Count missing values per column - CRITICAL for data quality assessment
+4. HANDLE MISSING VALUES - DELETION
+python
+df1 = data.dropna()
+# Delete ALL rows with ANY missing values - SIMPLE but aggressive method
+5. HANDLE MISSING VALUES - IMPUTATION
+python
+data["Age"].fillna(29.699118)
+# Fill missing Age values with mean - BASIC imputation technique
+📁 FILE 2: DataFrame Creation (Exp_05)
+1. CREATE DATAFRAME FROM SCRATCH
+python
+df = pd.DataFrame([[10,15,20,16],[19,17,15,13],[15,19,17,14]],
+                  columns=["CD","DBMS","DSS","CAO"])
+# Create DataFrame manually - ESSENTIAL for testing and small datasets
+2. CHECK DATAFRAME SHAPE
+python
+df.shape  # Returns (rows, columns)
+# ALWAYS check this first - know your data dimensions
+3. ADD NEW COLUMN
+python
+df3["DM"] = [12,15,17,19]
+# Add new column to existing DataFrame - VERY COMMON operation
+4. DELETE ROWS/COLUMNS
+python
+df3.drop(index=[1])  # Delete row
+df3.drop(columns=["DM"])  # Delete column
+# Data cleaning - remove unwanted data
+5. BASIC STATISTICS
+python
+df5["DSS"].mean()   # Average
+df5["DSS"].median() # Middle value
+df5["DSS"].min()    # Smallest
+df5["DSS"].max()    # Largest
+# Fundamental statistics - FOUNDATION of data analysis
+6. CREATE PANDAS SERIES
+python
+Roll_list = pd.Series(Name, index=[1,2,3,4,5])
+# Create 1D labeled array - BASIC building block of pandas
+🎯 THE 10 MOST IMPORTANT COMMANDS (RANKED)
+pd.read_csv() - Load data (where analysis begins)
+
+df.info() - Understand data structure (first diagnostic)
+
+df.isna().sum() - Find missing data (data quality check)
+
+df.shape - Know data size (essential context)
+
+pd.DataFrame() - Create data structures (build from scratch)
+
+df["column"] - Access columns (most frequent operation)
+
+df.drop() - Remove data (cleaning & preprocessing)
+
+.mean()/.median() - Calculate statistics (basic analysis)
+
+.fillna() - Handle missing values (data preparation)
+
+.append() - Add new data (expand datasets)
+
+
+
+
+
+
+
+
+
+
+
+
+Simple Linear Regression Explained Like I'm 5
+🎯 What This Experiment is REALLY About:
+Imagine you're trying to figure out: "How does work experience affect salary?" This notebook answers that question using math (but I'll explain it like we're talking about video games).
+
+📊 Step-by-Step Breakdown (In Simple Terms)
+📁 1. Loading the Data
+python
+data = pd.read_csv("Salary_Data.csv")
+What's happening: We're opening a spreadsheet that has 2 columns:
+
+YearsExperience: How long people have worked (1.1 years, 1.3 years, etc.)
+
+Salary: How much money they make
+
+Analogy: Imagine you have a list of 30 of your friends:
+
+Column 1: How many years they've been playing Fortnite
+
+Column 2: How good their Fortnite rank is
+
+👀 2. Looking at the Data
+python
+data.head()  # Shows first 5 people
+data.tail()  # Shows last 5 people
+data.describe()  # Shows averages and ranges
+What we learn from data.describe():
+
+Average experience: 5.3 years
+
+Average salary: $76,003
+
+Most experienced: 10.5 years → $122,391 salary
+
+Least experienced: 1.1 years → $39,343 salary
+
+Key insight: More experience = more money (usually!)
+
+🔢 Important Numbers to Understand
+data.shape = (30, 2)
+Translation: We have 30 people, 2 pieces of info about each
+
+data.mean()
+YearsExperience mean = 5.31 years
+
+Salary mean = $76,003
+
+What this means: If you took all 30 people, this is their "middle ground"
+
+data.median()
+YearsExperience median = 4.7 years
+
+Salary median = $65,237
+
+Why different from mean? Because some people make LOTS of money (outliers), which pulls the average up
+
+🎯 The MAIN IDEA: Independent vs Dependent Variables
+The BIG Question:
+"If I know someone's experience (X), can I predict their salary (Y)?"
+
+The Variables:
+python
+x = data.drop('Salary', axis=1)  # X = Experience (what we KNOW)
+y = data.Salary                   # Y = Salary (what we WANT to predict)
+Simple Analogy:
+
+X (Independent): Hours you study for a test
+
+Y (Dependent): Grade you get on the test
+
+The relationship: More study hours → Better grade
+
+📈 What IS Linear Regression?
+Think of it like drawing the BEST POSSIBLE LINE through dots:
+Imagine you plot all 30 people on a graph:
+
+X-axis (horizontal): Years of experience
+
+Y-axis (vertical): Salary
+
+You'd get 30 dots. Linear regression finds the one straight line that comes closest to ALL the dots.
+
+The Magic Formula (Simplified):
+text
+Predicted Salary = (Slope × YearsExperience) + StartingPoint
+From our data:
+
+StartingPoint (when experience = 0): Around $25,000-$30,000
+
+Slope: For each extra year, salary increases by ~$9,000
+
+So if someone has 5 years experience:
+
+text
+Predicted Salary = ($9,000 × 5) + $30,000 = $75,000
+🔍 What the Code is ACTUALLY Doing (Behind the Scenes)
+Step 1: Data Preparation
+The computer needs the data in the right format:
+
+X = Just the experience column
+
+Y = Just the salary column
+
+Step 2: Finding the Line
+The computer tries THOUSANDS of different lines and picks the one with the smallest total error.
+
+What's "error"? How far each dot is from the line.
+
+Step 3: Making Predictions
+Once it has the "best line," you can ask:
+
+"What salary for 3 years experience?" → Plug into formula
+
+"What salary for 7 years experience?" → Plug into formula
+
+🎮 Real-World Examples
+Example 1: Video Game Hours vs Skill Level
+X: Hours played per week
+
+Y: Rank/Level achieved
+
+Prediction: "If you play 10 hours/week, you'll reach Gold rank"
+
+Example 2: Study Time vs Exam Score
+X: Hours studied
+
+Y: Exam percentage
+
+Prediction: "Study 20 hours → 80% score, Study 30 hours → 90% score"
+
+Example 3: Exercise vs Weight Loss
+X: Hours exercised per week
+
+Y: Pounds lost per month
+
+Prediction: "Exercise 5 hours/week → Lose 4 pounds/month"
+
+⚠️ Important Warnings (What Linear Regression CAN'T Do)
+1. It's Not Perfect
+Just because there's a line doesn't mean it's 100% accurate. Some dots will be far from the line.
+
+2. It Assumes Straight Line Relationship
+What if the relationship is curved? (Like: first year of experience gives big raise, but 10th year gives small raise)
+
+3. Correlation ≠ Causation
+Just because two things move together doesn't mean one CAUSES the other!
+
+Bad Example: Ice cream sales and drowning deaths both increase in summer. Does ice cream cause drowning? NO! It's the heat/beach trips.
+
+✅ What We ACTUALLY Learned From This Data:
+On average, each year of experience adds about $9,000 to salary
+
+Starting salary (with 0 experience) is around $25,000-$30,000
+
+The relationship is strong - experience explains most of salary variation
+
+We can make predictions: "Someone with 6 years experience will make about $79,000"
+
+📚 The Takeaway for Beginners:
+Linear regression is just fancy math for answering:
+"When X changes by 1, how much does Y change?"
+
+In this case: "When experience increases by 1 year, salary increases by about $9,000"
+
+It's one of the MOST USEFUL tools in data science because it helps us:
+
+Understand relationships between things
+
+Make predictions about the future
+
+Make decisions based on data
+
+Simple test to know when to use it: If you can plot your data and the dots roughly form a straight line pattern → Use linear regression!
+
+
+
+
+
+
+
+
+
+
+
+Datasets Used:
+This notebook doesn't use real datasets - it creates artificial/synthetic data for demonstration purposes:
+
+Sequential Dataset: x = np.arange(1, 11) creates an array [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+Linear Relationship Dataset: y = 2*x creates [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+
+Random Dataset: np.random.randint(1, 100, 10) generates 10 random integers between 1-100
+
+Frequency Distribution Dataset: H = (1,1,1,2,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,7,7,7,7,8,8)
+
+Simple List Dataset: B = [1,2,3,4,5,6,7]
+
+Command-by-Command Explanation:
+Imports and Setup:
+python
+import numpy as np
+from matplotlib import pyplot as plt
+numpy (np): For numerical operations and array creation
+
+matplotlib.pyplot (plt): Main plotting library for visualizations
+
+1. Line Chart
+python
+x = np.arange(1, 11)  # Creates array [1, 2, 3, ..., 10]
+y = 2*x  # Creates y values where each is double the x value
+
+plt.plot(x, y)  # Creates line plot connecting (x,y) points
+plt.title("Line chart")  # Adds chart title
+plt.xlabel("x axis")  # Labels x-axis
+plt.ylabel("y axis")  # Labels y-axis
+plt.show()  # Displays the plot
+2. Bar Chart
+python
+plt.bar(x, y)  # Creates vertical bars for each (x,y) pair
+plt.title("Bar chart")
+plt.xlabel("x axis")
+plt.ylabel("y axis")
+plt.show()
+3. Bar Chart with Random Data & Customization
+python
+x = np.arange(1, 11)
+y = np.random.randint(1, 100, 10)  # Random y values
+
+plt.bar(x, y, color='skyblue', edgecolor='black')  # Custom colors
+plt.title("Random Bar Chart")
+plt.xlabel("X Axis")
+plt.ylabel("Y Axis (Random Values)")
+4. Scatter Plot
+python
+plt.scatter(x, y)  # Creates scatter plot (individual points, not connected)
+plt.title("scatter plot")
+plt.xlabel("x axis")
+plt.ylabel("y axis")
+plt.show()
+5. Histogram
+python
+H = (1,1,1,2,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,7,7,7,7,8,8)
+plt.hist(H)  # Shows frequency distribution of values in H
+plt.show()
+Histogram: Shows how many times each value appears
+
+Example: Value 1 appears 3 times, value 5 appears 5 times, etc.
+
+6. Box Plot
+python
+B = [1,2,3,4,5,6,7]
+plt.boxplot(B)  # Shows data distribution (min, Q1, median, Q3, max)
+plt.show()
+Box Plot: Shows:
+
+Median (middle line in box)
+
+Quartiles (box edges)
+
+Whiskers (data range)
+
+Outliers (if any)
+
+Real Dataset Examples for Practice:
+Instead of synthetic data, you can use these real datasets:
+
+1. Built-in Datasets in Python:
+python
+# Using scikit-learn
+from sklearn import datasets
+iris = datasets.load_iris()  # Famous flower dataset
+2. Online Datasets to Download:
+Iris Dataset (flowers): 150 samples, 4 features
+
+Titanic Dataset (passengers): 891 samples, features like age, class, gender
+
+Boston Housing Dataset: 506 samples, housing price features
+
+3. Create More Realistic Practice Data:
+python
+import pandas as pd
+
+# Simulated sales data
+months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+sales = [120, 135, 145, 165, 180, 200]
+expenses = [80, 85, 90, 100, 110, 115]
+
+# Temperature data
+temperatures = [22, 25, 28, 30, 27, 24, 26, 29, 31, 28, 25, 23]
+
+# Student scores
+students = ['Alice', 'Bob', 'Charlie', 'David', 'Eva']
+math_scores = [85, 92, 78, 88, 95]
+science_scores = [88, 84, 82, 90, 92]
+Key Concepts Learned:
+Line Charts: Show trends over time or sequential data
+
+Bar Charts: Compare discrete categories
+
+Scatter Plots: Show relationship between two variables
+
+Histograms: Show frequency distribution
+
+Box Plots: Show data spread and outliers
+
+
+
+
+
+
+
+
+This notebook demonstrates a Logistic Regression model for predicting heart disease. Let me explain what's happening in simple terms, as if explaining to someone with no technical background:
+
+Dataset Used: Heart Disease Dataset
+This is a real medical dataset called "heart.csv" (Heart Disease dataset) containing:
+
+1025 patient records (rows)
+
+14 medical features (columns)
+
+Target variable: target (0 = no heart disease, 1 = heart disease)
+
+Features in the dataset:
+age: Patient's age
+
+sex: Gender (1 = male, 0 = female)
+
+cp: Chest pain type (0-3)
+
+trestbps: Resting blood pressure
+
+chol: Cholesterol level
+
+fbs: Fasting blood sugar > 120 mg/dl (1 = true, 0 = false)
+
+restecg: Resting electrocardiographic results
+
+thalach: Maximum heart rate achieved
+
+exang: Exercise induced angina (1 = yes, 0 = no)
+
+oldpeak: ST depression induced by exercise
+
+slope: Slope of peak exercise ST segment
+
+ca: Number of major vessels colored by fluoroscopy
+
+thal: Thalassemia type
+
+target: Heart disease diagnosis (what we want to predict)
+
+Step-by-Step Explanation:
+1. Loading the Data (Like Opening a Spreadsheet)
+python
+import pandas as pd
+import numpy as np
+Think of it as: Getting the tools to read and work with data tables
+
+pandas: Excel for Python - reads CSV files into tables
+
+numpy: Calculator for numbers - does math operations
+
+python
+data = pd.read_csv("heart.csv")
+data.head()
+Reads the heart disease file from your Desktop
+
+.head() shows the first 5 rows (like looking at the top of a spreadsheet)
+
+2. Understanding the Data (Checking What We Have)
+python
+data.info()
+Think of it as: Getting a summary of our patient records
+
+Shows: 1025 patients, 14 columns, no missing data
+
+python
+data.shape  # (1025, 14)
+Think of it as: "How big is our spreadsheet?"
+
+Answer: 1025 rows (patients), 14 columns (information about each patient)
+
+python
+data.isna().sum()
+Think of it as: "Are there any empty boxes in our spreadsheet?"
+
+Answer: All zeros mean no empty cells - good quality data!
+
+3. Preparing for the Prediction Game
+python
+x = data.drop("target", axis=1)
+y = data["target"]
+Think of it as: Separating clues from the answer
+
+x: All the patient information (age, cholesterol, etc.) - these are our CLUES
+
+y: Whether they have heart disease (0 or 1) - this is the ANSWER we want to predict
+
+4. Creating Practice and Test Groups
+python
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+Think of it as: Creating two groups:
+
+Training group (80%): 820 patients - the model "studies" these
+
+Test group (20%): 205 patients - the model "takes a test" on these
+
+random_state=42: Makes sure we get the same split every time (for consistent results)
+
+5. Training the Logistic Regression Model
+python
+from sklearn.linear_model import LogisticRegression
+log = LogisticRegression()
+log.fit(x_train, y_train)
+Think of it as: Teaching a student to recognize patterns
+
+LogisticRegression(): Creates a "smart student" that learns patterns
+
+.fit(): The student studies the training patients to learn what patterns lead to heart disease
+
+6. Testing the Model (Taking the Exam)
+python
+y_pred1 = log.predict(x_test)
+Think of it as: The trained student now tries to diagnose the test patients
+
+Shows: "For each test patient, what does the model predict? 0 (no disease) or 1 (disease)?"
+
+7. Checking How Well the Model Did
+python
+from sklearn.metrics import accuracy_score
+accuracy_score(y_test, y_pred1)
+Think of it as: Grading the student's test
+
+Result: 78.05% accuracy - The model correctly predicted heart disease 78% of the time
+
+8. Looking at Mistakes (Confusion Matrix)
+python
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred1)
+Think of it as: A report card showing what the model got right/wrong:
+
+Correct predictions: Top-left and bottom-right boxes
+
+Wrong predictions: Top-right and bottom-left boxes
+
+9. Visualizing the Results
+python
+import seaborn as sns
+sns.heatmap(cm_df, annot=True, fmt='d', cmap='Blues')
+Think of it as: Making a colorful chart to easily see performance
+
+Blue squares with numbers show how many predictions were correct/wrong
+
+What Does This All Mean in Simple Terms?
+Imagine you're a doctor who has seen 820 patients with heart disease. You notice patterns:
+
+Older patients tend to have more heart problems
+
+Higher cholesterol often means higher risk
+
+Certain types of chest pain are warning signs
+
+After learning from these 820 patients, we show you 205 new patients. Based on what you learned, you try to diagnose them. You're right about 78% of the time.
+
+The confusion matrix tells us:
+
+How many healthy patients you correctly said were healthy
+
+How many sick patients you correctly said were sick
+
+How many you misdiagnosed (said healthy when sick, or sick when healthy)
+
+For Easy Exploration:
+Here's a simple way to understand what each column means:
+
+python
+# Create a simple summary
+summary = {
+    "Feature": ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", 
+                "exang", "oldpeak", "slope", "ca", "thal", "target"],
+    "What it means": ["Patient age", "Gender (1=male, 0=female)", 
+                     "Type of chest pain (0-3)", "Resting blood pressure",
+                     "Cholesterol level", "High fasting sugar?", 
+                     "Heart electrical activity at rest", "Max heart rate during exercise",
+                     "Chest pain during exercise?", "Heart stress during exercise",
+                     "Slope of heart activity during exercise", "Number of blocked blood vessels",
+                     "Blood disorder type", "Heart disease? (1=yes, 0=no)"]
+}
+
+# Convert to a readable table
+summary_df = pd.DataFrame(summary)
+print(summary_df)
+Real-World Applications:
+This model could help doctors:
+
+Screen patients for heart disease risk
+
+Prioritize testing for high-risk patients
+
+Educate patients about their risk factors
+
+Save costs by reducing unnecessary tests for low-risk patients
+
+Want to Explore Further?
+Try answering these questions about the data:
+
+What's the average age of patients with heart disease?
+
+Do men or women have higher rates of heart disease in this dataset?
+
+What cholesterol level is most common in heart disease patients?
+
+
+
+
+
+Machine Learning Explained to a Layman 🧠🤖
+What is Machine Learning?
+Think of it like this: You're teaching a child to recognize animals.
+
+Traditional Programming: You write rules: "If it has whiskers and says 'meow', it's a cat."
+Machine Learning: You show the child 1000 pictures of cats and dogs, and the child learns the patterns on its own.
+
+The 3 Main Types of ML (Simple Analogy)
+1. Supervised Learning 🏫
+"Learning with a teacher"
+
+Analogy: A student with answer key
+
+You show: "This is a cat" (input) → "Yes" (label)
+
+You show: "This is a dog" → "No"
+
+The model learns the patterns
+
+2. Unsupervised Learning 🔍
+"Finding hidden patterns"
+
+Analogy: Sorting laundry without labels
+
+You have mixed clothes (unlabeled data)
+
+The model groups: socks together, shirts together
+
+It finds patterns YOU didn't know existed
+
+3. Reinforcement Learning 🎮
+"Learning by trial and error"
+
+Analogy: Teaching a dog tricks
+
+Dog sits → gets treat (reward)
+
+Dog jumps → gets timeout (penalty)
+
+Dog learns what actions give rewards
+
+Common Algorithms Explained Simply
+1. Logistic Regression (What you just used!)
+Analogy: A Yes/No Question Machine
+
+text
+"Based on your symptoms, do you have heart disease? (Yes/No)"
+How it works:
+
+Takes patient info (age, cholesterol, etc.)
+
+Weighs each factor: Age × 0.3 + Cholesterol × 0.2 + Blood Pressure × 0.1 = Score
+
+If score > 0.5 → "Yes, heart disease"
+
+If score ≤ 0.5 → "No heart disease"
+
+Technical: Uses sigmoid function to squash scores between 0-1 (like a probability)
+
+2. Decision Trees 🌳
+Analogy: A Flowchart or "20 Questions" Game
+
+text
+Is patient over 50? → Yes → Cholesterol > 200? → Yes → "High risk"
+                     ↓ No
+                → "Low risk"
+How it works:
+
+Creates a tree of questions
+
+Each branch splits data based on best question
+
+Follow branches to get final prediction
+
+Technical: Uses information gain or Gini impurity to choose best splits
+
+3. Random Forest 🌲🌲🌲
+Analogy: Asking 100 doctors for their opinion
+
+text
+Doctor 1 says: "Heart disease"
+Doctor 2 says: "No disease"
+Doctor 3 says: "Heart disease"
+...
+Final diagnosis: Majority vote = "Heart disease"
+How it works:
+
+Creates 100+ decision trees (each sees different data)
+
+Each tree votes
+
+Majority wins!
+
+Technical: Ensemble method using bagging (Bootstrap Aggregating)
+
+4. K-Nearest Neighbors (KNN) 👥
+Analogy: "Birds of a feather flock together"
+
+text
+New patient arrives
+Look at 5 most similar previous patients
+If 4 had heart disease → New patient probably has it too
+How it works:
+
+Finds K most similar patients (neighbors)
+
+Checks their diagnoses
+
+Majority vote determines prediction
+
+Technical: Uses distance metrics (Euclidean, Manhattan) to find similarity
+
+5. Neural Networks 🧠
+Analogy: Team of specialists in a hospital
+
+text
+Receptionist → Checks basic info
+Nurse → Looks at symptoms
+Lab Tech → Analyzes test results
+Doctor → Makes final diagnosis
+How it works:
+
+Multiple layers process data step-by-step
+
+Each "neuron" learns specific patterns
+
+Complex patterns emerge through layers
+
+Technical: Feedforward networks with backpropagation for learning
+
+The ML Process (Step-by-Step)
+Step 1: Get Data 📊
+python
+# Like gathering patient records
+patients = [
+    {"age": 45, "cholesterol": 220, "disease": "yes"},
+    {"age": 30, "cholesterol": 180, "disease": "no"},
+    # ... more records
+]
+Step 2: Clean Data 🧹
+Remove wrong entries (age: 250 years?)
+
+Fill missing values (average cholesterol?)
+
+Fix formatting issues
+
+Step 3: Split Data ✂️
+Training set (80%): Textbook for learning
+
+Test set (20%): Final exam
+
+Validation set: Practice tests
+
+Step 4: Choose Algorithm 🤔
+text
+If predicting categories (yes/no): Logistic Regression, Decision Trees
+If predicting numbers (price): Linear Regression
+If finding groups: K-Means Clustering
+Step 5: Train Model 📚
+python
+model.learn(training_data)
+# The model finds patterns in the data
+Step 6: Test Model 📝
+python
+accuracy = model.test(test_data)
+# "How many questions did it get right?"
+Step 7: Evaluate 📈
+Accuracy: 78% right
+
+Precision: When it says "yes", how often is it right?
+
+Recall: Of all actual "yes", how many did it catch?
+
+Step 8: Deploy 🚀
+Put model in hospital system
+
+New patient arrives → model helps with diagnosis
+
+Key ML Concepts Explained Simply
+Overfitting 🤯
+Analogy: Student memorizes textbook but fails real-world test
+
+Problem: Model learns training data TOO well (including noise)
+
+Solution: Simplify model, get more data
+
+Underfitting 😴
+Analogy: Student didn't study enough
+
+Problem: Model misses important patterns
+
+Solution: Make model more complex, add features
+
+Bias-Variance Tradeoff ⚖️
+Analogy: Archery practice
+
+High Bias: Always misses target (too simple)
+
+High Variance: Shots scattered everywhere (too complex)
+
+Goal: Hit bullseye consistently
+
+Feature Engineering 🔧
+Analogy: Giving the model better clues
+
+text
+Bad clue: "Patient ID: 38472"
+Good clue: "Age: 45"
+Better clue: "Age group: 40-50, Cholesterol ratio: 4.5"
+Cross-Validation 🔄
+Analogy: Multiple practice tests
+
+Train on 4 sets, test on 1
+
+Repeat 5 times with different test sets
+
+Average results for better estimate
+
+Real-World ML Examples
+1. Netflix Recommendations 🎬
+python
+# What you watched + What similar users liked = Recommendations
+2. Gmail Spam Filter 📧
+python
+# Words in email → Spam probability
+# "Free", "Winner", "Click here" → High spam score
+3. Self-Driving Cars 🚗
+python
+# Camera image → Is this a pedestrian? → Brake or Continue
+4. Fraud Detection 🕵️
+python
+# Your spending pattern + Transaction details = Fraud score
+# "Buying shoes in Paris while you're in New York" → Flag!
+Common ML Tools (Simple Explanation)
+Scikit-learn 🧰
+Analogy: Swiss Army knife for ML
+
+Has all common algorithms
+
+Easy to use: model.fit(data)
+
+TensorFlow/Keras 🧠
+Analogy: Lego set for neural networks
+
+Build complex brain-like models
+
+Used for images, text, speech
+
+Pandas 🐼
+Analogy: Excel for Python
+
+Read, clean, analyze data tables
+
+df.head() = look at top of spreadsheet
+
+Matplotlib/Seaborn 📊
+Analogy: Paint and brushes for charts
+
+Create graphs to understand data
+
+Visualize patterns and results
+
+Your Learning Path 🗺️
+Week 1-2: Basics
+Learn Python basics
+
+Understand data types (numbers, text, categories)
+
+Practice with simple datasets (Iris flowers, Titanic passengers)
+
+Week 3-4: Supervised Learning
+Start with Logistic Regression (like you did!)
+
+Try Decision Trees
+
+Learn about accuracy, confusion matrix
+
+Week 5-6: More Algorithms
+Random Forest (better trees!)
+
+KNN (simple but powerful)
+
+Learn about train/test split
+
+Week 7-8: Evaluation
+Different metrics (precision, recall, F1-score)
+
+Cross-validation
+
+Feature importance
+
+
+
+
+
+I'll explain this KNN Classifier notebook command by command. This is a machine learning experiment using K-Nearest Neighbors (KNN) for heart disease classification.
+
+Notebook Structure & Initial Setup
+Cell 1-5: Title and Metadata
+python
+# To perform and analysis of KNN Classifier Algorithm
+Purpose: Title of the notebook/experiment
+
+Explanation: This is a markdown cell explaining the notebook's objective
+
+python
+#Experiment no:-09
+Purpose: Experiment number tracking
+
+Explanation: This is just metadata for academic/lab documentation
+
+python
+#Aim:-To perform and analysis of KNN classifier Algorithm
+Purpose: States the specific aim/objective of the experiment
+
+python
+#Name:Ziya Firdos
+#Roll no:68
+#sec:3A
+#Subjict:ET1
+#Date:30/09/25
+Purpose: Student information for academic submission
+
+Explanation: Personal details and submission date
+
+Data Science Libraries Import
+Cell 6-7: Import Libraries
+python
+import pandas as pd 
+import numpy as np
+Purpose: Import essential data manipulation libraries
+
+Explanation:
+
+pandas: For data manipulation and analysis (DataFrames)
+
+numpy: For numerical operations and array handling
+
+Data Acquisition
+Cell 8-15: Load Dataset
+python
+import os
+os.getcwd()  # Shows current working directory
+os.chdir("C:\\Users\\USER\\Desktop")  # Change directory to Desktop
+data=pd.read_csv("heart.csv")  # Load heart disease dataset
+Purpose: Load the dataset from file system
+
+Explanation:
+
+os: Operating system interface for file path operations
+
+os.getcwd(): Gets current working directory
+
+os.chdir(): Changes to specified directory
+
+pd.read_csv(): Reads CSV file into pandas DataFrame
+
+Cell 16-24: Data Exploration
+python
+data.head()  # Show first 5 rows
+data.tail()  # Show last 5 rows
+data.info()  # Display DataFrame structure and data types
+data.describe()  # Statistical summary of data
+Purpose: Initial data exploration
+
+Explanation:
+
+head(): Preview beginning of data
+
+tail(): Preview end of data
+
+info(): Shows columns, data types, non-null counts
+
+describe(): Generates descriptive statistics (mean, std, min, max, percentiles)
+
+Cell 25-27: Data Shape/Dimensions
+python
+data.shape  # Returns (rows, columns)
+data.size   # Total number of elements (rows × columns)
+data.ndim   # Number of dimensions (2 for DataFrame)
+Purpose: Understand dataset structure
+
+Explanation:
+
+shape: (1025, 14) means 1025 rows, 14 columns
+
+size: 14350 total data points
+
+ndim: 2-dimensional structure
+
+Data Preprocessing
+Cell 28-35: Missing Value Detection
+python
+data.isna()  # Check for missing values (NaN) - returns boolean DataFrame
+data.isna().any()  # Check if any column has missing values
+data.isna().sum()  # Count missing values per column
+Purpose: Identify and handle missing data
+
+Explanation:
+
+isna(): Creates boolean mask where True indicates missing value
+
+.any(): Returns True if any missing values in column
+
+.sum(): Counts missing values per column
+
+Result: No missing values found (all False, sum=0)
+
+Model Preparation
+Cell 36-37: Feature/Target Split
+python
+x = data.drop("target", axis=1)  # Features (all columns except target)
+y = data["target"]  # Target variable (heart disease presence: 0=no, 1=yes)
+Purpose: Separate features (X) from target (y)
+
+Explanation:
+
+x: Contains 13 features for prediction (age, sex, cholesterol, etc.)
+
+y: Binary target (0=no heart disease, 1=heart disease)
+
+axis=1: Drop column (not row)
+
+Cell 38-41: Train-Test Split
+python
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+Purpose: Split data into training and testing sets
+
+Explanation:
+
+train_test_split(): Randomly splits data
+
+test_size=0.2: 20% for testing, 80% for training
+
+random_state=42: Ensures reproducible splits
+
+KNN Model Implementation
+Cell 42-50: KNN Classifier Setup
+python
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+knn = KNeighborsClassifier()  # Create KNN classifier with default k=5
+knn.fit(x_train, y_train)  # Train model on training data
+y_pred2 = knn.predict(x_test)  # Make predictions on test data
+accuracy = accuracy_score(y_test, y_pred2)  # Calculate accuracy
+accuracy  # Display accuracy (0.7317 = 73.17%)
+Purpose: Build and evaluate KNN model
+
+Explanation:
+
+Default n_neighbors=5 (5 nearest neighbors)
+
+fit(): Learns patterns from training data
+
+predict(): Applies learned patterns to test data
+
+accuracy_score(): Measures prediction accuracy
+
+Result: 73.17% accuracy with default k=5
+
+Model Analysis & Visualization
+Cell 51-62: Accuracy vs K (Line Chart)
+python
+import matplotlib.pyplot as plt
+k = range(1, 11)  # k values from 1 to 10
+acc = [accuracy_score(y_test, KNeighborsClassifier(n_neighbors=i)
+                      .fit(x_train, y_train).predict(x_test)) for i in k]
+Purpose: Find optimal k value by testing different neighbor counts
+
+Explanation:
+
+Tests k values 1 through 10
+
+For each k: trains KNN, makes predictions, calculates accuracy
+
+Creates list of accuracies for visualization
+
+Cell 63-73: Visualization Plots
+python
+# Line Chart
+plt.plot(k, acc, marker='o', color='blue')
+plt.title('KNN Accuracy vs K (Line Chart)')
+plt.xlabel('K')  # Number of neighbors
+plt.ylabel('Accuracy')  # Model accuracy
+plt.grid(True)  # Add grid lines
+plt.show()
+
+# Bar Chart
+plt.bar(k, acc, color='skyblue')
+plt.title('KNN Accuracy vs K (Bar Chart)')
+plt.xlabel('K')
+plt.ylabel('Accuracy')
+plt.show()
+Purpose: Visualize how accuracy changes with different k values
+
+Explanation:
+
+Line chart: Shows trend of accuracy vs k
+
+Bar chart: Alternative visualization showing same data
+
+Helps identify optimal k value for this dataset
+
+Conclusion
+Cell 74: Final Summary
+python
+Conclusion:-Thus we Study To perform and analysis of KNN classifier Algorithm.
+Purpose: Conclude the experiment
+
+Explanation: States completion of KNN classifier study and analysis
+
+Key Insights from the Code:
+Dataset: Heart disease dataset with 1025 samples, 13 features, binary classification
+
+Data Quality: No missing values detected
+
+Model Performance: Default KNN (k=5) achieved 73.17% accuracy
+
+Parameter Tuning: Evaluated k values 1-10 to find optimal neighbors
+
+Visualization: Used both line and bar charts to analyze k parameter effect
+
+Technical Details:
+Algorithm: K-Nearest Neighbors (supervised learning)
+
+Problem Type: Binary classification (heart disease yes/no)
+
+Evaluation Metric: Accuracy (correct predictions / total predictions)
+
+Validation Method: Train-test split (80-20 split)
+
+Libraries Used: pandas, numpy, scikit-learn, matplotlib
+
+The notebook demonstrates a complete machine learning workflow: data loading → exploration → preprocessing → model training → evaluation → visualization → conclusion.
+
+
+
+
+now what does this algorthm mean to a layman?
+KNN Explained Like You're 10 Years Old 🧒
+Imagine This Scenario:
+You're new in school and don't know anyone. At lunchtime, you need to decide where to sit.
+
+The "Find Friends" Method (KNN in Action):
+You look around at the 5 closest tables (these are your "neighbors")
+
+You check: What kind of kids are at each table?
+
+Table 1: 4 kids with soccer jerseys, 1 without
+
+Table 2: 3 kids reading books, 2 drawing
+
+Table 3: 5 kids playing cards
+
+You decide: "I like soccer! Most kids at Table 1 are soccer fans, so I'll sit there."
+
+That's Exactly What KNN Does!
+In the Heart Disease Example:
+The computer is trying to figure out: "Does this person have heart disease?"
+
+Instead of asking: "Are you sick?", it asks:
+
+"Who are your 5 closest neighbors?" (People most similar to you in age, cholesterol, blood pressure, etc.)
+
+"What happened to them?"
+
+If 4 out of 5 had heart disease → "You probably have it too!"
+
+If 4 out of 5 were healthy → "You're probably fine!"
+
+If it's 3-2 or 2-3 → "Hmm, borderline case"
+
+Real-Life Analogies:
+🍕 Pizza Ordering:
+The restaurant looks at your last 5 orders
+
+If you ordered pepperoni 4 out of 5 times → "They probably want pepperoni again!"
+
+🎬 Netflix Recommendations:
+Netflix sees you watched 3 superhero movies and 2 comedies
+
+Your 5 "neighbors" (people with similar tastes) loved "The Avengers"
+
+Netflix says: "You'll probably like 'The Avengers' too!"
+
+🏥 Doctor's Diagnosis (Our Case):
+Doctor thinks: "Hmm, this patient is:
+
+65 years old (similar to patient A)
+
+High cholesterol (like patient B)
+
+High blood pressure (like patient C)
+
+And patients A, B, and C all had heart problems..."
+
+Conclusion: "You might have heart issues too!"
+
+The "K" Number Explained:
+"How many neighbors should we check?"
+
+K=1: Just ask your best friend → Risky! What if they're weird?
+
+K=5: Ask 5 friends → More reliable consensus
+
+K=10: Ask 10 friends → Even better, but maybe too many opinions
+
+K=100: Ask the whole school → Too much noise!
+
+The notebook was finding the best number of "friends" to ask!
+
+Why This Algorithm is Cool:
+Simple Logic:
+"If it walks like a duck, quacks like a duck, hangs out with ducks... it's probably a duck!"
+
+No Complicated Rules:
+Doesn't need to understand why heart disease happens
+
+Just knows: "People like this usually have this outcome"
+
+Like Human Thinking:
+We often decide by thinking: "What happened to people in similar situations?"
+
+The Problem (Like in Real Life):
+What if...
+All your "neighbors" are wrong?
+
+You're actually unique/different?
+
+The similarities aren't the right ones to check?
+
+That's why accuracy was only 73% - Sometimes the "friends" give bad advice!
+
+Bottom Line:
+KNN is the computer version of: "Birds of a feather flock together" 🐦
+
+If you want to know what you are, look at what people most similar to you are!
+
+So next time you're deciding where to eat:
+
+Think of 5 friends with similar tastes
+
+See where they like to eat
+
+Go there!
+
+Congratulations! You just used the KNN algorithm in real life! 🎉
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
